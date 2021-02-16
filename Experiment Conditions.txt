@@ -1,0 +1,84 @@
+17/01/2021
+
+Lego Mindstorms EV3
+
+Large Motor and Colour Sensor
+
+Runs between 7pm and 7.30pm
+
+Reflectivity of numbers 0 to 9 (Reflected light intensity)
+
+Motor Power = 20
+Rotations/run = 5 (1800 degrees)
+Runs per number = 5
+Total rotations per number = 25
+Duration of run = 10 seconds
+Duration of rotation = 8.82 seconds
+Sampling rate = 20/second
+
+How is accuracy affected by:
+- speed of rotation
+- distance from the color sensor
+- number of experiments performed
+- sampling rate
+- reflectivity of background
+- size of the degree buckets
+- ambient light level and direction
+- number material (wood, metal)
+
+
+Experiment Steps
+1. Describe the experiment, theory behind it and what trying to achieve (unique reflectivity signature)
+2. Equipment and instructions
+3. Build and test model. Optimim settings. 
+4. Capture the results
+5. EDA
+6. Clean and prepare the results (jupyter and python)
+7. Create an ML model, calculate accuracy and save model
+8. Algorithm to predict 'live' results on lego model
+9. Conveyor belt of letters measured for reflectivity
+10. Room for improvement. Effect of changing settings
+
+
+TO DO
+Python code to:
+- run lego model on press of physical button
+- record result
+- save results locally as file
+- clean and prepare data
+- make prediction using model
+- display prediction prominently
+
+Discussion Points
+- using Lego Robot Inventor ... limitations
+- doing the alphabet (upper and lowercase)
+
+- Write experiment to blog and create YouTube videos
+- Host code, build instructions and model on GitHub
+
+
+Use SFTP to transfer data file from ev3 to laptop for analysis?
+https://unix.stackexchange.com/questions/106480/how-to-copy-files-from-one-machine-to-another-using-ssh
+
+Use SSH to transfer files?
+
+
+After 1st prediction test
+1. reflectivity column has a 'space' prefix
+2. do training on 50 rotations per number
+3. stop the platform over-spinning
+4. take the most frequent prediction or median as the result
+5. print the avg/median graph of unknown vs graph of predicted
+
+
+Other Experiments
+
+1. Bouncing ball - height estimator
+2. Character recognition - trigger something - speech, action, e.g calculation 5 + 2?
+3. Jelly bean / Skittles / Revels / Quality Street / Coin separator & counter
+4. Salt solution concentration using temperature sensor for cooling speed
+5. Using sensors for classification problems
+6. Can system send or receive text message when something happens or to trigger an activity
+7. Slot machine - identifies coin for certain number of plays or total calculation
+8. NFC simulator - subtracts from account on recognition of number/value/purchase(e.g. fruit) - prints receipt
+
