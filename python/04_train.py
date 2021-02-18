@@ -13,100 +13,115 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-df_dataset = pd.read_csv('./clean_data/training_dataset.csv')
-df_dataset.head()
-
-df_dataset.shape
-
-# Extract the feature (column) names of the data
-feature_names = df_dataset.columns.drop('target')
-feature_names
-
-# Extract the feature data as X
-X = df_dataset.drop(labels='target', axis=1)
-X
-
-# Extract a list of all posible targets (i.e. numbers 0 to 9)
-target_names = df_dataset['target'].unique() #list(range(0,10))
-target_names
-
-# Extract the target label column as y
-y = df_dataset['target']
-y
-
-# ## Train the model
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 import pickle
 
-# Split the data into training (70%) and test (30%), set the random generator seed and mix the rows
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=21, stratify=y)
+def preprocess_training_dataset(filename):
+    """Load training dataset and extract feature set and target labels"""
 
-# Initialise the classifier, passing in the expected number of unique targets
-knn = KNeighborsClassifier(n_neighbors=10)
+    df_dataset = pd.read_csv(f'./clean_data/{filename}')
 
-# Fit the model to the training data
-knn.fit(X_train, y_train)
+    # Extract the feature data as X
+    X = df_dataset.drop(labels='target', axis=1)
 
-# ## Save the ML Model
-# Serialise and save the model to disk
-pickle.dump(knn, open('./ml_model/number_reflectivity_knn_model', 'wb'))
+    # Extract the target label column as y
+    y = df_dataset['target']
 
-# Predict the target value of each test data row
-y_pred = knn.predict(X_test)
+    return X, y
 
-print(f"Test set predictions: {y_pred}")
 
-# Calculate the accuracy of the model on the test data
-knn.score(X_test, y_test)
+def train_knn_model(X, y, model_filename):
+    """Split the dataset, fit the model to the training data and save the model"""
 
-# ## Model Complexity Curve
-# Setup arrays to store train and test accuracies
-neighbors = np.arange(1,12)
-train_accuracy = np.empty(len(neighbors))
-test_accuracy = np.empty(len(neighbors))
+    # Split the data into training (70%) and test (30%), set the random generator seed and mix the rows
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=21, stratify=y)
 
-# Loop over different values of k
-for i, k in enumerate(neighbors):
-    # Setup a k-NN Classifier with k neighbors: knn
-    knn = KNeighborsClassifier(k)
-    
-    # Fit the classifier to the training data
+    # Initialise the classifier, passing in the expected number of unique targets
+    knn = KNeighborsClassifier(n_neighbors=10)
+
+    # Fit the model to the training data
     knn.fit(X_train, y_train)
-    
-    # Compute accuracy on the training set
-    train_accuracy[i] = knn.score(X_train, y_train)
-    
-    # Compute accuracy on the testing set
-    test_accuracy[i] = knn.score(X_test, y_test)
+
+    # ## Save the ML Model
+    # Serialise and save the model to disk
+    pickle.dump(knn, open(f'./ml_model/{model_filename}', 'wb'))
+
+    return X_train, X_test, y_train, y_test, knn
 
 
-# Generate plot
-plt.title('k-NN: Varying Number of Neighbors')
-plt.plot(neighbors, test_accuracy, label = 'Testing Accuracy')
-plt.plot(neighbors, train_accuracy, label = 'Training Accuracy')
-plt.legend()
-plt.xlabel('Number of Neighbors')
-plt.ylabel('Accuracy')
-plt.show()
+def predict_results_and_calculate_accuracys(X_test, knn_model):
+    """Predict the target labels of the test data and calculate their accuracy"""    
+
+    # Predict the target value of each test data row
+    y_pred = knn_model.predict(X_test)
+
+    # Calculate the accuracy of the model on the test data
+    accuracy = knn_model.score(X_test, y_test)
+
+    return y_pred, accuracy
 
 
-# Test and training accuracy are both 100% indicating the data is relatively simple and the 
-# reflectivity signatures of each number well defined with little overlap
+def plot_model_complexity_curve(X_train, X_test, y_train, y_test, knn_model, neighbours):
+    """Plot the accuracy of the model for different values of kNN neighbors"""
 
-# ## Confusion Matrix
-from sklearn.metrics import classification_report, confusion_matrix
+    # Setup arrays to store train and test accuracies
+    n = np.arange(1,neighbours)
+    train_accuracy = np.empty(len(n))
+    test_accuracy = np.empty(len(n))
+
+    # Loop over different values of k
+    for i, k in enumerate(n):
+        # Setup a k-NN Classifier with k neighbors: knn
+        knn = KNeighborsClassifier(k)
+        
+        # Fit the classifier to the training data
+        knn.fit(X_train, y_train)
+        
+        # Compute accuracy on the training set
+        train_accuracy[i] = knn.score(X_train, y_train)
+        
+        # Compute accuracy on the testing set
+        test_accuracy[i] = knn.score(X_test, y_test)
+
+    # Generate plot
+    plt.title('k-NN: Varying Number of Neighbors')
+    plt.plot(n, test_accuracy, label = 'Testing Accuracy')
+    plt.plot(n, train_accuracy, label = 'Training Accuracy')
+    plt.legend()
+    plt.xlabel('Number of Neighbors')
+    plt.ylabel('Accuracy')
+    plt.show()
+
+
+if __name__ == "__main__":
+
+    dataset_filename = 'training_dataset.csv'
+    X, y = preprocess_training_dataset(dataset_filename)
+
+    model_filename = 'number_reflectivity_knn_model'
+    X_train, X_test, y_train, y_test, kNN_model = train_knn_model(X, y, model_filename)
+
+    y_pred, accuracy = predict_results_and_calculate_accuracys(X_test, kNN_model)
+
+    print(f"Test set predictions: {y_pred}")
+
+    print(f"Accuracy of predictions: {accuracy}")
+
+    kNN_neighbors = 12
+    plot_model_complexity_curve(X_train, X_test, y_train, y_test, kNN_model, kNN_neighbors)
+
+    print(confusion_matrix(y_test, y_pred))
+
+    # ## Classification Report
+    print(classification_report(y_test, y_pred))
+
 
 # From the top left of the matrix (for numbers 0 to 9), the vertical rows represent actual values and the horizontal 
 # columns represent predicted values. There are no instances were the actual and predicted values are different.
 # Hence, the diagional represents a count of all rows where the actual and predicted values are the same. 
 # Therefore, in this case, the predicted results are 100% accurate
-
-print(confusion_matrix(y_test, y_pred))
-
-# ## Classification Report
-print(classification_report(y_test, y_pred))
 
 
 

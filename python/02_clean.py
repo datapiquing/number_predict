@@ -43,7 +43,8 @@ def rotation_buckets(degrees):
 def create_clean_dataframe(filename):
     '''Read in raw data file and return clean DataFrame with target column'''
 
-    target_value = int(filename[5:6])
+    i = filename.index('_')
+    target_value = int(filename[i-1:i])
     
     df_raw_data = pd.read_csv(f'./raw_data/{filename}')
     
@@ -57,12 +58,10 @@ def create_clean_dataframe(filename):
     results_list = []
     rotation_column = 'angle'
     reflectivity_column = 'reflectivity'
-    for index, row in df_raw_data.iterrows():
-        prev_bucket_degrees = -1
+    for _, row in df_raw_data.iterrows():
         actual_degrees = row[rotation_column]
         bucket_degrees = rotation_buckets(actual_degrees)
         relectivity_percentage = row[reflectivity_column]
-        #print(actual_degrees, bucket_degrees, relectivity_percentage)
         results_list.append((bucket_degrees, relectivity_percentage))
         
     # Convert the list of result tuples (rotation angle, refelctivity) to a dictionary of dictionaries where
@@ -120,7 +119,7 @@ def combine_cleaned_dataframes(filename_list):
 
     df_clean_results = pd.DataFrame()
 
-    for filename in all_filenames:
+    for filename in filename_list:
         df = create_clean_dataframe(filename)
         df_clean_results = pd.concat([df_clean_results, df], ignore_index=True) 
 
