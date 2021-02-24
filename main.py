@@ -24,7 +24,9 @@ args = parser.parse_args()
 # Initialize the EV3 Brick.
 ev3 = EV3Brick()
 
+# Display font, style and size
 big = Font(family='Helvetica', size=24, bold=True)
+ev3.screen.set_font(big)
 
 if args.predict == None:
 
@@ -73,32 +75,16 @@ if args.predict == None:
             break
 
 else:
-    ev3.screen.clear()
-    ev3.speaker.set_volume(100, which='PCM')
-    ev3.speaker.say(args.predict)
-    ev3.speaker.say('ZERO')
-    ev3.speaker.say('ONE')
-    ev3.speaker.say('TWO')
-    ev3.speaker.say('THREE')
-    ev3.speaker.say('FOUR')
-    ev3.speaker.say('FIVE')
-    ev3.speaker.say('SIX')
-    ev3.speaker.say('SEVEN')
-    ev3.speaker.say('EIGHT')
-    ev3.speaker.say('NINE')                    
-    ev3.speaker.play_file(SoundFile.ZERO)
-    ev3.speaker.play_file(SoundFile.ONE)
-    ev3.speaker.play_file(SoundFile.TWO)
-    ev3.speaker.play_file(SoundFile.THREE)
-    ev3.speaker.play_file(SoundFile.FOUR)
-    ev3.speaker.play_file(SoundFile.FIVE)
-    ev3.speaker.play_file(SoundFile.SIX)
-    ev3.speaker.play_file(SoundFile.SEVEB)
-    ev3.speaker.play_file(SoundFile.EIGHT)
-    ev3.speaker.play_file(SoundFile.NINE)                
-    big = Font(size=96, bold=True)
-    ev3.screen.set_font(big)
-#    ev3.screen.print('ONE')
-    ev3.screen.draw_text(x=50, y=50, text='ONE')
+    numbers = ['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE']
+    number_dict = {i : val for i, val in enumerate(numbers)}
+    prediction = number_dict[int(args.predict)]
 
-    wait(5000)
+    ev3.screen.clear()
+    ev3.screen.draw_text(x=50, y=50, text=prediction)
+    ev3.speaker.set_volume(100, which='PCM')
+    ev3.speaker.say(prediction)
+    wait(5000)  
+
+    # ev3.speaker.say('TWO')
+    # ev3.speaker.play_file(SoundFile.TWO)
+
