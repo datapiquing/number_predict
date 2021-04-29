@@ -20,7 +20,7 @@ Build instructions, technical details and a video demonstration of the project c
 
 ## Implementation
 
-> main.py
+> **main.py**
 
 This is a python script that needs to be downloaded to an EV3 brick running 
 [pybricks micropython](https://education.lego.com/en-gb/downloads/mindstorms-ev3/software). It has 2 functions:
@@ -48,35 +48,35 @@ There are several online resources explaining how to do this:
 - [Setup RSA key for SSH](https://muddlinthrough.com/tag/mindstorms/)
 - [Mindstorms EV3 Revisited](https://muddlinthrough.com/tag/mindstorms/)
 
-> 01_collect.ipynb
+> **01_collect.ipynb**
 
 A notebook that when executed on a PC, connected to an EV3 brick, does the following:
 - prompts the user to place each number (0 to 9) on the platform for analysis
 - executes '**main.py**' on the EV3 brick to log reflectivity vs angle of rotation to a CSV file
 - returns a CSV file for each number to the '**raw_data**' folder
 
-> 01_clean.ipynb
+> **01_clean.ipynb**
 
 Restructures each CSV file into a format suitable for machine learning, concatenates them into a single file 
 and saves it to the '**clean_data**' folder as '**training_dataset.csv**'
 
-> 03_analyse.ipynb
+> **03_analyse.ipynb**
 
 Generate plots of '**reflectivity vs angle of rotation**' for all numbers
 
-> 04_train.ipynb
+> **04_train.ipynb**
 
 Use the '**training_dataset**' to train a machine learning model (**K-Nearest Neighbour**) and save it to the '**ml_model**' 
 folder. Determine the accuracy of the model
 
-> 05_predict.ipynb
+> **05_predict.ipynb**
 
 A notebook that when executed on a PC, connected to an EV3 brick, does the following:
-- prompts the user to place a number on the lego platform for the machine learning to predict
+- prompts the user to place a number on the lego platform for the machine learning model to predict
 - executes '**main.py**' on the EV3 brick to log reflectivity vs angle of rotation to a CSV file
 - transfer the CSV file from the EV3 brick to the PC
 - process the raw data - clean and categorise into rotation buckets
-- predict the number using the machine learning model created from the training dataset
+- predict the number using the kNN machine learning model created from the training dataset
 - display an image of the predicted number on the PC
 - display and speak the predicted value on the EV3 brick
 - plot graphs of rotation vs reflectivity (including mean and median plots) in the notebook
