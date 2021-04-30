@@ -20,6 +20,8 @@ Build instructions, technical details and a video demonstration of the project c
 
 ## Implementation
 
+![Lego Mindstorms EV3 Model](./images/howItWorks.png)
+
 > **main.py**
 
 This is a python script that needs to be downloaded to an EV3 brick running 
