@@ -1,0 +1,1 @@
+A directory containing raw data files that have been processed and restructured into a format suitable for machine learning
