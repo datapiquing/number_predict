@@ -33,9 +33,9 @@ A number of experimental variables can be passed as arguments to the script incl
 - number of rotations
 - speed of rotation
 - sensor measurement interval
-- motor port
-- colour sensor port 
-- touch sensor port
+- motor port (default 'A')
+- colour sensor port (default 'S4') 
+- touch sensor port (default 'S1')
 - target value (number)
 - log filename
 - predicted value 
